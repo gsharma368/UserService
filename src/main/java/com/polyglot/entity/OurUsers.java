@@ -25,16 +25,6 @@ public class OurUsers implements UserDetails {
     private String city;
     private String role;
 
-    @ElementCollection
-    private List<Integer> courses;
-
-    @ElementCollection
-    private List<Integer> attemptedQuestions;
-
-
-
-//    @OneToMany
-//    private List<Course> courses;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

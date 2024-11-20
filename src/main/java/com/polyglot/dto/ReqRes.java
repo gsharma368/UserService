@@ -2,7 +2,6 @@ package com.polyglot.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.polyglot.entity.Course;
 import com.polyglot.entity.OurUsers;
 import lombok.Data;
 
@@ -26,6 +25,5 @@ public class ReqRes {
     private String password;
     private OurUsers ourUsers;
     private List<OurUsers> ourUsersList;
-    private List<Course> coursesList;
 
 }
