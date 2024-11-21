@@ -3,11 +3,15 @@ package com.polyglot.service;
 import com.polyglot.dto.ReqRes;
 import com.polyglot.entity.OurUsers;
 import com.polyglot.repository.UsersRepo;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +19,10 @@ import java.util.Optional;
 
 @Service
 public class UsersManagementService {
+
+    public static final String USER_SUBSCRIBED = "/register/student/";
+    @Value("${courseregistration.service.url}")
+    private String courseRegistrationServiceUrl;
 
     @Autowired
     private UsersRepo usersRepo;
@@ -25,7 +33,11 @@ public class UsersManagementService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    private final RestTemplate restTemplate;
 
+    public  UsersManagementService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     public ReqRes register(ReqRes registrationRequest){
         ReqRes resp = new ReqRes();
@@ -142,6 +154,11 @@ public class UsersManagementService {
 
     public ReqRes deleteUser(Integer userId) {
         ReqRes reqRes = new ReqRes();
+        if(checkIfUserIsSubscribed(userId)){
+            reqRes.setStatusCode(200);
+            reqRes.setMessage("User is subscribed, so can not delete");
+            return reqRes;
+        }
         try {
             Optional<OurUsers> userOptional = usersRepo.findById(userId);
             if (userOptional.isPresent()) {
@@ -211,6 +228,16 @@ public class UsersManagementService {
         }
         return reqRes;
 
+    }
+
+    private boolean checkIfUserIsSubscribed(Integer studentId) {
+        String getCourseRegistrationEndpoint = String.join(courseRegistrationServiceUrl, String.join(USER_SUBSCRIBED, String.valueOf(studentId)));
+        ResponseEntity<Object> response = restTemplate.getForEntity(courseRegistrationServiceUrl + USER_SUBSCRIBED+ String.valueOf(studentId), Object.class);
+
+        if(response.getBody().toString().equals("true")) {
+            return true;
+        }
+        return false;
     }
 
 }
