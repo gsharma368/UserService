@@ -2,7 +2,7 @@
 Steps to run Course Master Service
 
 Run mysql via docker using following command: 
-**docker run -p 3320:3306 --name userservicecontainer -e MYSQL_PASSWORD=Bits@2024 -e MYSQL_USER=sa -e MYSQL_ROOT_PASSWORD=Bits@2024 -e MYSQL_DATABASE=userservicedb  mysql:8.3.0 -d **
+**docker run -p 3330:3306 --name userservicecontainer -e MYSQL_PASSWORD=Bits@2024 -e MYSQL_USER=sa -e MYSQL_ROOT_PASSWORD=Bits@2024 -e MYSQL_DATABASE=userservicedb  mysql:8.3.0 -d **
 
 First run might take time as image might be getting downloaded.
 Build the service using mvn clean install. First run might take time depending on the network connection and available mirrors.
